@@ -9,6 +9,7 @@
 
 <div class="container" id="app" style="margin-top:40px;">
   <template>
+  <form method="POST" action="/register/update-status">
     <v-card>
       <v-card-title>
           รายการการลงทะเบียน
@@ -28,19 +29,32 @@
         item-value="number"
       >
         <template v-slot:item.check="{ item }">
+        <template v-if="item.status !== 'ลงทะเบียนสำเร็จ' && item.status !== 'ยกเลิกการลงทะเบียน'">
           <v-btn-toggle
             v-model="item.text"
             color="deep-purple accent-3"
             rounded="0"
             group
           >
-          <v-btn value="center" color="blue">Center</v-btn>
-          <v-btn value="right" color="green">Right</v-btn>
+          <v-btn value="confirm" color="blue">Confirm</v-btn>
+          <v-btn value="decline" color="green">Decline</v-btn>
 
           </v-btn-toggle>
-        </template>
+          </template>
+            <span v-else></span> <!-- กรณีไม่แสดงปุ่ม เมื่อกดเลือก Confirm หรือ Decline และเพิ่มปุ่มกดบันทึกข้างล่างตาราง จะให้ update สถานะใน db ถ้า Confirm เปลี่ยนเป็น ลงทะเบียนสำเร็จ แต่ถ้า Decline ให้เปลี่ยนเป็น ยกเลิกการลงทะเบียน -->
+            <input type="hidden" :name="'status[' + item.number + ']'" :value="item.text" />
+          </template>
       </v-data-table>
     </v-card>
+    <!-- ปุ่มบันทึก -->
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <button type="submit" class="btn btn-primary">บันทึก</button>
+    </v-card-actions>
+    </v-card>
+      {{ csrf_field() }}
+    </form>
+
   </template>
 </div>
 
@@ -88,41 +102,7 @@ var app = new Vue({
           { text: 'สถานะ', value: 'status' },
           { text: 'ตรวจสอบ', value: 'check' },
         ],
-        list: [
-          {
-            number: '1',
-            datetime: '16/12/2567 16:00:00',
-            name: 'นาย บวย',
-            tel: '0928651233',
-            email: 'testxxx@gmail.com',
-            status: 'รอดำเนินการ',
-            text: ''
-          },
-          {
-            number: '2',
-            datetime: '16/12/2567 16:00:00',
-            name: 'นาย รวย',
-            tel: '0828757273',
-            email: 'testxxx@gmail.com',
-            status: 'รอดำเนินการ',
-          },
-          {
-            number: '3',
-            datetime: '16/12/2567 16:00:00',
-            name: 'นาย รวย',
-            tel: '0828757273',
-            email: 'testxxx@gmail.com',
-            status: 'รอดำเนินการ',
-          },
-          {
-            number: '4',
-            datetime: '16/12/2567 16:00:00',
-            name: 'นาย รวย',
-            tel: '0828757273',
-            email: 'testxxx@gmail.com',
-            status: 'รอดำเนินการ',
-          },
-        ],
+        list: @json($registers) // ส่งข้อมูล PHP -> Vue.js
         }
     }
 })
