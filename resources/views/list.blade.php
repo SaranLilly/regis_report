@@ -4,12 +4,13 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
+
 <style>
 </style>
 
 <div class="container" id="app" style="margin-top:40px;">
   <template>
-  <form method="POST" action="/register/update-status">
+  <form id="registerForm" method="POST" action="/register/update-status">
     <v-card>
       <v-card-title>
           รายการการลงทะเบียน
@@ -49,18 +50,25 @@
     <!-- ปุ่มบันทึก -->
     <v-card-actions>
       <v-spacer></v-spacer>
-      <button type="submit" class="btn btn-primary">บันทึก</button>
+      <button type="button" @click="confirmSubmit" class="btn btn-primary">Save</button>
+
     </v-card-actions>
     </v-card>
       {{ csrf_field() }}
     </form>
 
   </template>
+
+  
+
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <!-- <script>
   export default {
     data () {
@@ -77,34 +85,54 @@
 </script> -->
 <script>
 var app = new Vue({
-    el: '#app',
-    vuetify: new Vuetify(),
-    data: () => {	// ประกาศตัวแปล
-        return {
-            text: 'center',
-            icon: 'justify',
-            toggle_none: null,
-            toggle_one: 0,
-            toggle_exclusive: 2,
-            toggle_multiple: [0, 1, 2],
-          search: '',
-          headers: [
-          {
-            text: 'ลำดับ',
-            align: 'start',
-            sortable: false,
-            value: 'number',
-          },
-          { text: 'วันที่-เวลา', value: 'datetime' },
-          { text: 'ชื่อ-นามสกุล', value: 'name' },
-          { text: 'เบอร์', value: 'tel' },
-          { text: 'อีเมล', value: 'email' },
-          { text: 'สถานะ', value: 'status' },
-          { text: 'ตรวจสอบ', value: 'check' },
-        ],
-        list: @json($registers) // ส่งข้อมูล PHP -> Vue.js
+  el: '#app',
+  vuetify: new Vuetify(),
+  data: () => ({
+    search: '',
+    headers: [
+      { text: 'ลำดับ', align: 'start', sortable: false, value: 'number' },
+      { text: 'วันที่-เวลา', value: 'datetime' },
+      { text: 'ชื่อ-นามสกุล', value: 'name' },
+      { text: 'เบอร์', value: 'tel' },
+      { text: 'อีเมล', value: 'email' },
+      { text: 'สถานะ', value: 'status' },
+      { text: 'ตรวจสอบ', value: 'check' },
+    ],
+    list: @json($registers) // ส่งข้อมูล PHP -> Vue.js
+  }),
+  // mounted() {
+  //   // เพิ่ม CSRF Token ให้กับทุกคำขอ Axios
+  //   axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  // },
+  methods: {
+    confirmSubmit() {
+      Swal.fire({
+        title: "Do you want to save the changes?",
+        showDenyButton: true,
+        confirmButtonText: "<span style='color: white;'>Save</span>",
+        denyButtonText: "<span style='color: white;'>Cancel</span>",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Swal.fire("Saved!", "", "success");
+          // document.getElementById("registerForm").submit(); // ส่งฟอร์ม
+          
+          const formData = new FormData(document.getElementById("registerForm"));
+
+          axios.post('/register/update-status', formData)
+          .then(response => {
+
+            Swal.fire("Saved!", response.data.message || "Changes have been saved.", "success");
+            this.list = response.data.updatedRegisters || this.list;//update สถานะตารางใหม่จาก response
+          })
+          .catch(error => {
+            Swal.fire("Error!", error.response.data.message || "Something went wrong.", "error");
+          });
+
+        } else if (result.isDenied) {
+
         }
+      });
     }
-})
+  }
+});
 </script>
-    
