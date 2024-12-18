@@ -61,20 +61,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-<!-- <script>
-  export default {
-    data () {
-      return {
-        text: 'center',
-        icon: 'justify',
-        toggle_none: null,
-        toggle_one: 0,
-        toggle_exclusive: 2,
-        toggle_multiple: [0, 1, 2],
-      }
-    },
-  }
-</script> -->
+
 <script>
 var app = new Vue({
     el: '#app',

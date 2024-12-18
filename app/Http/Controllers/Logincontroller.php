@@ -23,7 +23,7 @@ class LoginController extends Controller
                   
             // if (Hash::check($validated['password'], $user->password)) {
               
-                return redirect('/welcome')->with('success', 'เข้าสู่ระบบสำเร็จ!');
+                return redirect('/list')->with('success', 'เข้าสู่ระบบสำเร็จ!');
             // }
         }
 
