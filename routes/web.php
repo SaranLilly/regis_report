@@ -22,11 +22,14 @@ Route::get('/login', function () {
     return view('login');
 });
 
+Route::get('/list', function () {
+    return view('list');
+});
 
 
 Route::post('/regis_form', [Usercontroller::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 
 
-Route::get('/list', [RegisterController::class, 'getAllList']);
+Route::get('/getAllList', [RegisterController::class, 'getAllList']);
 Route::post('/register/update-status', [RegisterController::class, 'updateStatus']);

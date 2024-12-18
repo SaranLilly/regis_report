@@ -31,7 +31,7 @@ class RegisterController extends Controller
             ->get();
 
         // dd($registers);
-        return view('list', ['registers' => $registers]);
+        return response()->json($registers);
     }
     public function updateStatus(Request $request)
     {

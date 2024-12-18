@@ -3,6 +3,7 @@
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
 <style>
@@ -42,7 +43,7 @@
 
           </v-btn-toggle>
           </template>
-            <span v-else></span> <!-- กรณีไม่แสดงปุ่ม เมื่อกดเลือก Confirm หรือ Decline และเพิ่มปุ่มกดบันทึกข้างล่างตาราง จะให้ update สถานะใน db ถ้า Confirm เปลี่ยนเป็น ลงทะเบียนสำเร็จ แต่ถ้า Decline ให้เปลี่ยนเป็น ยกเลิกการลงทะเบียน -->
+            <span v-else></span> <!-- กรณีไม่แสดงปุ่ม -->
             <input type="hidden" :name="'status[' + item.number + ']'" :value="item.text" />
           </template>
       </v-data-table>
@@ -98,13 +99,28 @@ var app = new Vue({
       { text: 'สถานะ', value: 'status' },
       { text: 'ตรวจสอบ', value: 'check' },
     ],
-    list: @json($registers) // ส่งข้อมูล PHP -> Vue.js
+    list: [], //
   }),
   // mounted() {
   //   // เพิ่ม CSRF Token ให้กับทุกคำขอ Axios
   //   axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   // },
+  mounted() {
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    this.fetchRegisters();
+  },
   methods: {
+    fetchRegisters() {
+      axios.get('/getAllList')
+        .then(response => {
+          // console.log(response.data);
+          this.list = response.data;
+        })
+        .catch(error => {
+          console.error("Error fetching registers:", error);
+          Swal.fire("Error!", "Cannot fetch data at this moment.", "error");
+        });
+    },
     confirmSubmit() {
       Swal.fire({
         title: "Do you want to save the changes?",
@@ -130,7 +146,7 @@ var app = new Vue({
 
         } else if (result.isDenied) {
 
-        }
+        }ห
       });
     }
   }
