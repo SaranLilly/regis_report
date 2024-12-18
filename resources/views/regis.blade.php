@@ -66,23 +66,68 @@
 
 
         </div>
-        <div class="subminButton" style="Align=left" >
+
+        {{-- Register Form submit --}}
+        {{-- <div class="subminButton" style="Align=left" >
             <p Align=right>
              <button type="submit" class="btn btn-primary" >ลงทะเบียน</button>
             </P>
-        </div>
-       
+        </div> --}}
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <button type="button" @click="confirmSubmit" class="btn btn-primary">ลงทะเบียน</button>
+    
+        </v-card-actions>
       </form>
     </div>
 </div>
 
 </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+  
   // สร้าง Vue instance พร้อม Vuetify
   new Vue({
       el: '#app',
       vuetify: new Vuetify(),
+
+  methods: {
+    confirmSubmit() {
+      Swal.fire({
+        title: "ต้องการทำการบันทึกหรือไม่?",
+        showDenyButton: true,
+        confirmButtonText: "<span style='color: white;'>บันทึก</span>",
+        denyButtonText: "<span style='color: white;'>ยกเลิก</span>",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Swal.fire("Saved!", "", "success");
+          // document.getElementById("registerForm").submit(); // ส่งฟอร์ม
+          
+          const formData = new FormData(document.getElementById("testregis"));
+
+          axios.post('/regis_form', formData)
+          .then(response => {
+            if(response.data.errors){
+              Swal.fire("บันทึกไม่สำเร็จจ้า!", response.data.message || "บันทึกไม่สำเร็จ", "error");
+            } else{
+              Swal.fire("บันทึก!", response.data.message || "บันทึกสำเร็จ", "success");
+              this.list = response.data.updatedRegisters || this.list;//update สถานะตารางใหม่จาก response
+            }
+
+           
+          })
+          .catch(error => {
+            Swal.fire("ผิดพลาด!", error.response.data.message || "บันทึกไม่สำเร็จ", "error");
+          });
+
+        } else if (result.isDenied) {
+
+        }
+      });
+    }
+  }
   });
 </script>
 

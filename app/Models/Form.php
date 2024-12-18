@@ -12,4 +12,6 @@ class Form extends Model
     protected $guarded = [];
     protected $table = 'register';
     public $timestamps = false;
+
+   
 }
