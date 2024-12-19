@@ -24,7 +24,7 @@
 
 <form action="{{ route('logout') }}" method="POST">
   @csrf
-  <div style="text-align: right;">
+  <div style="text-align: right; margin-bottom: 20px;" >
       <button type="submit" class="btn btn-danger">Logout</button>
   </div>
 
