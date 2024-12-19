@@ -107,7 +107,7 @@
             style="cursor: pointer;"
             @click="openImageModal(item.image)"
           />
-          <span v-else>ไม่ให้ดู</span> <!-- กรณีไม่มีรูป -->
+          <span v-else></span> <!-- กรณีไม่มีรูป -->
         </div>
       </template>
 
