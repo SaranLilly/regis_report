@@ -30,6 +30,14 @@
         :search="search"
         item-value="number"
       >
+
+      <template v-slot:item.image="{ item }">
+        <div class="text-center" style="margin:10px">
+          <img :src="item.image" alt="User Image" width="100" height="100" v-if="item.image" />
+          <span v-else>No Image</span> <!-- กรณีไม่มีรูป -->
+        </div>
+      </template>
+
         <template v-slot:item.check="{ item }">
         <template v-if="item.status !== 'ลงทะเบียนสำเร็จ' && item.status !== 'ยกเลิกการลงทะเบียน'">
           <v-btn-toggle
@@ -97,14 +105,11 @@ var app = new Vue({
       { text: 'เบอร์', value: 'tel' },
       { text: 'อีเมล', value: 'email' },
       { text: 'สถานะ', value: 'status' },
+      { text: 'รูปภาพ', value: 'image' },
       { text: 'ตรวจสอบ', value: 'check' },
     ],
-    list: [], //
+    list: [],
   }),
-  // mounted() {
-  //   // เพิ่ม CSRF Token ให้กับทุกคำขอ Axios
-  //   axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  // },
   mounted() {
     axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     this.fetchRegisters();
@@ -112,10 +117,16 @@ var app = new Vue({
   methods: {
     fetchRegisters() {
       axios.get('/getAllList')
-        .then(response => {
-          // console.log(response.data);
-          this.list = response.data;
-        })
+      .then(response => {
+        // เพิ่ม base URL ให้กับ path รูปภาพ
+        const baseUrl = window.location.origin; // ดึง base URL ของเว็บ
+        this.list = response.data.map(item => {
+          return {
+            ...item,
+            image: item.image ? `${baseUrl}/storage/${item.image}` : null
+          };
+        });
+      })
         .catch(error => {
           console.error("Error fetching registers:", error);
           Swal.fire("Error!", "Cannot fetch data at this moment.", "error");
@@ -136,9 +147,12 @@ var app = new Vue({
 
           axios.post('/register/update-status', formData)
           .then(response => {
-
-            Swal.fire("Saved!", response.data.message || "Changes have been saved.", "success");
-            this.list = response.data.updatedRegisters || this.list;//update สถานะตารางใหม่จาก response
+            Swal.fire("Saved!", response.data.message || "Changes have been saved.", "success")
+            .then(() => {
+              // Fetch the updated data to refresh the table
+              this.fetchRegisters();
+            });
+            //this.list = response.data.updatedRegisters || this.list;//update สถานะตารางใหม่จาก response
           })
           .catch(error => {
             Swal.fire("Error!", error.response.data.message || "Something went wrong.", "error");
@@ -146,7 +160,7 @@ var app = new Vue({
 
         } else if (result.isDenied) {
 
-        }ห
+        }
       });
     }
   }

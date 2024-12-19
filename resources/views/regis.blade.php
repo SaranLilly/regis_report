@@ -42,7 +42,7 @@
 
           <div class="mb-3">
             <label for="exampleInputtel" class="form-label">เบอร์โทรศัพท์</label>
-            <input placeholder="กรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก"  pattern="[0-9]{10}"  type="number " maxlength="10" name="register_tel" class="form-control" id="exampleInputtel" required>
+            <input placeholder="กรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก"  pattern="[0-9]{10}"  type="number" maxlength="10" name="register_tel" class="form-control" id="exampleInputtel" required>
           </div> 
 
         <div class="mb-3">
