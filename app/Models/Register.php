@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Register extends Model
 {
+    public $timestamps = false;
+    protected $primaryKey = 'register_id';
     // ชื่อของตารางในฐานข้อมูล
     protected $table = 'register';
 

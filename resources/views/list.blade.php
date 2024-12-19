@@ -101,7 +101,7 @@
         </div>
       </template>
 
-        <template v-slot:item.check="{ item }">
+      <template v-if="userRole !== 'user'" v-slot:item.check="{ item }">
         <template v-if="item.status !== 'ลงทะเบียนสำเร็จ' && item.status !== 'ยกเลิกการลงทะเบียน'">
           <v-btn-toggle
             v-model="item.text"
@@ -120,7 +120,7 @@
           </template>
             <span v-else></span> <!-- กรณีไม่แสดงปุ่ม -->
             <input type="hidden" :name="'status[' + item.number + ']'" :value="item.text" />
-          </template>
+        </template>
       </v-data-table>
       
     </v-card>
@@ -171,23 +171,32 @@ var app = new Vue({
   el: '#app',
   vuetify: new Vuetify(),
   data: () => ({
+    userRole: "{{ $user->user_role }}",
     selectedStatus: 'Filter by Status',  // กำหนดค่าเริ่มต้น
     dropdownOpen: false,
     search: '',
-    headers: [
-      { text: 'ลำดับ', align: 'start', sortable: false, value: 'number' },
-      { text: 'วันที่-เวลา', value: 'datetime' },
-      { text: 'ชื่อ-นามสกุล', value: 'name' },
-      { text: 'เบอร์', value: 'tel' },
-      { text: 'อีเมล', value: 'email' },
-      { text: 'สถานะ', value: 'status' },
-      { text: 'รูปภาพ', value: 'image' },
-      { text: 'ตรวจสอบ', value: 'check' },
-    ],
     list: [],
     dialog: false,
     selectedImage: null,
   }),
+  computed: {
+    headers() {
+      // ตรวจสอบ userRole ก่อนกำหนด headers
+      const baseHeaders = [
+        { text: 'ลำดับ', align: 'start', sortable: false, value: 'number' },
+        { text: 'วันที่-เวลา', value: 'datetime' },
+        { text: 'ชื่อ-นามสกุล', value: 'name' },
+        { text: 'เบอร์', value: 'tel' },
+        { text: 'อีเมล', value: 'email' },
+        { text: 'สถานะ', value: 'status' },
+        { text: 'รูปภาพ', value: 'image' },
+      ];
+      if (this.userRole !== 'user') {
+        baseHeaders.push({ text: 'ตรวจสอบ', value: 'check' });
+      }
+      return baseHeaders;
+    },
+  },
   mounted() {
     axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     this.fetchRegisters();

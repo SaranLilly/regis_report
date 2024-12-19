@@ -62,7 +62,7 @@ class RegisterController extends Controller
             }
 
             // อัปเดตข้อมูลในฐานข้อมูล
-            $register = Register::find($id); // ค้นหา register ตาม ID
+            $register = Register::where('register_id', $id)->first();
             if ($register) {
                 $register->register_status = $updateStatus; // ตั้งค่าค่าของสถานะ
                 $register->save(); // บันทึกการเปลี่ยนแปลง
