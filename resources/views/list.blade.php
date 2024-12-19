@@ -137,10 +137,14 @@
     <!-- ปุ่มบันทึก -->
     <v-card-actions>
       <v-spacer></v-spacer>
-      <div style="margin-right:10px">
-        <button type="button" @click="exportToExcel" class="btn btn-primary">Export to Excel</button>
-      </div>
-      <button type="button" @click="confirmSubmit" class="btn btn-success">Save</button>
+      <template v-if="userRole !== 'user'">
+        <div style="margin-right:10px">
+          <button type="button" @click="exportToExcel" class="btn btn-primary">Export to Excel</button>
+        </div>
+        <div style="">
+          <button type="button" @click="confirmSubmit" class="btn btn-success">Save</button>
+        </div>
+      </template>
 
     </v-card-actions>
     </v-card>
