@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 class RegisterController extends Controller
 {
+    
     public function getAllList(Request $request)
     {
         // รับค่า status จาก query string ถ้ามี
@@ -69,3 +70,8 @@ class RegisterController extends Controller
     }
 
 }
+
+
+// $new_tel = '';                                                                                                                                          $tel = substr(($tel), 0, 10);
+        
+// $new_tel = 'XXX-XXX-' . substr($tel, -4);

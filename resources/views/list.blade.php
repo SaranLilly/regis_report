@@ -8,9 +8,19 @@
 
 <style>
 </style>
-<div class="container" id="app" style="margin-top:30px width:10px;">
+<h1>ยินดีต้อนรับ {{ $user->email }}</h1>
+
+<form action="{{ route('logout') }}" method="POST">
+  @csrf
+  <button type="submit" class="btn btn-danger">Logout</button>
+</form>
+
+
+<div class="container" id="app" style="margin-top:40px;">
   <template>
+   
   <form id="registerForm" method="POST" action="/register/update-status">
+
     <v-card>
       <v-card-title>
           รายการการลงทะเบียน
