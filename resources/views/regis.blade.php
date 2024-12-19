@@ -50,6 +50,7 @@
           class="form-control" 
           id="exampleInputtel" 
           required
+          @blur ="checkTel($event.target.value)"
           oninput="this.value = this.value.slice(0, 10)">
    
 <div class="invalid-feedback">
@@ -106,6 +107,13 @@
       vuetify: new Vuetify(),
 
   methods: {
+    checkTel(value) {
+    if (value.length !== 10) {
+        alert("กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก");
+    } else {
+        console.log("เบอร์โทรศัพท์ถูกต้อง:", value);
+    }
+  },
     confirmSubmit() {
       Swal.fire({
         title: "ต้องการทำการบันทึกหรือไม่?",
@@ -127,7 +135,7 @@
               Swal.fire("บันทึก!", response.data.message || "บันทึกสำเร็จ", "success");
               this.list = response.data.updatedRegisters || this.list;//update สถานะตารางใหม่จาก response
             }
-
+          
            
           })
           .catch(error => {
@@ -138,6 +146,7 @@
 
         }
       });
+
     }
   }
   });
