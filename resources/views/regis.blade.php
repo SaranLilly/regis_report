@@ -42,8 +42,20 @@
 
           <div class="mb-3">
             <label for="exampleInputtel" class="form-label">เบอร์โทรศัพท์</label>
-            <input placeholder="กรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก"  pattern="[0-9]{10}"  type="number" maxlength="10" name="register_tel" class="form-control" id="exampleInputtel" required>
-          </div> 
+            {{-- <input placeholder="กรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก"  pattern="[0-9]{10}"  type="number" maxlength="10" name="register_tel" class="form-control" id="exampleInputtel" required>
+          </div> --}}
+          <input placeholder="กรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก" 
+          type="number" 
+          name="register_tel" 
+          class="form-control" 
+          id="exampleInputtel" 
+          required
+          oninput="this.value = this.value.slice(0, 10)">
+   
+<div class="invalid-feedback">
+    กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก
+</div>
+
 
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">อีเมล</label>
@@ -75,7 +87,7 @@
         </div> --}}
         <v-card-actions>
           <v-spacer></v-spacer>
-          <button type="button" @click="confirmSubmit" class="btn btn-primary">ลงทะเบียน</button>
+          <button type="button" @click="confirmSubmit" class="btn btn-primary" style="color:white;">ลงทะเบียน</button>
     
         </v-card-actions>
       </form>

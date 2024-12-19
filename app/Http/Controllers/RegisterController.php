@@ -33,6 +33,14 @@ class RegisterController extends Controller
 
         // dd($registers);
         return response()->json($registers);
+        // return view('list', [
+        //     'registers' => $registers->map(function ($register) {
+        //         $register->tel = 'xxxxxx' . substr($register->tel, -4);
+        //         $register->email='xxxxxx'. substr($register->email, -4);
+
+        //         return $register;
+        //     }),
+        // ]);
     }
     public function updateStatus(Request $request)
     {

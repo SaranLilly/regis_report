@@ -19,7 +19,7 @@ class UserController extends Controller
             'register_name' => 'required|max:255',
             'register_mail' => 'required|email|max:255', 
             'register_tel' => 'required|max:255',
-        
+            'register_image' => ['image', 'mimes:jpeg,png,jpg', 'max:2048'],
            
         ]);
         $checkFromDB = Form::where('register_mail', $validated['register_mail'])
@@ -59,6 +59,7 @@ class UserController extends Controller
         $path = null;
         if ($request->hasFile('register_image')) {
             $path = $request->file('register_image')->store('images', 'public');
+           
         }
 
         Form::create([
