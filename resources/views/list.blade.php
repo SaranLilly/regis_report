@@ -135,10 +135,10 @@
       
     </v-card>
     <!-- ปุ่มบันทึก -->
-    <v-card-actions>
-      <v-spacer></v-spacer>
+    <v-card-actions style="display: flex; justify-content: space-between; margin-top: 0px;">
+
       <template v-if="userRole !== 'user'">
-        <div style="margin-right:10px">
+        <div style="">
           <button type="button" @click="exportToExcel" class="btn btn-primary">Export to Excel</button>
         </div>
         <div style="">
