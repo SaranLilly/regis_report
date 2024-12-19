@@ -28,7 +28,7 @@ Route::get('/list', function () {
     return view('list', ['user' => $user]);
     }
     else{
-        // print(error);
+      return redirect('/login'); 
     }
    
     // return view('list');
