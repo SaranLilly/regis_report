@@ -212,6 +212,17 @@ var app = new Vue({
         Swal.fire("Error!", "Cannot fetch data at this moment.", "error");
       });
     },
+    openImageModal(image) {
+      Swal.fire({
+        imageUrl: image,
+        imageHeight: 500,
+        imageAlt: "A tall image",
+        confirmButtonText: "<span style='color: white;'>Close</span>",
+        customClass: {
+          confirmButton: 'custom-ok-button' // กำหนดคลาสให้ปุ่ม OK
+        }
+      });
+    },
     fetchRegisters() {
       axios.get('/getAllList')
       .then(response => {
