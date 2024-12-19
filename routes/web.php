@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Usercontroller;
 
 use App\Http\Controllers\LoginController;
-
+use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\Registercontroller;
 
 
@@ -23,7 +23,15 @@ Route::get('/login', function () {
 });
 
 Route::get('/list', function () {
-    return view('list');
+     $user = Auth::user(); 
+    if($user){
+    return view('list', ['user' => $user]);
+    }
+    else{
+        // print(error);
+    }
+   
+    // return view('list');
 });
 
 
@@ -33,3 +41,5 @@ Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/getAllList', [RegisterController::class, 'getAllList']);
 Route::post('/register/update-status', [RegisterController::class, 'updateStatus']);
+
+Route::post('/logout', [Logoutcontroller::class, 'logout'])->name('logout');
