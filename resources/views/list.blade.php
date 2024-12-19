@@ -97,7 +97,7 @@
             style="cursor: pointer;"
             @click="openImageModal(item.image)"
           />
-          <span v-else>No Image</span> <!-- กรณีไม่มีรูป -->
+          <span v-else>ไม่ให้ดู</span> <!-- กรณีไม่มีรูป -->
         </div>
       </template>
 
@@ -109,8 +109,12 @@
             rounded="0"
             group
           >
-          <v-btn value="confirm" color="blue">Confirm</v-btn>
-          <v-btn value="decline" color="green">Decline</v-btn>
+          <v-btn value="confirm" color="blue">
+            <span style='color: green;'>Confirm</span>
+          </v-btn>
+          <v-btn value="decline" color="green">
+            <span style='color: red;'>Decline</span>
+          </v-btn>
 
           </v-btn-toggle>
           </template>
@@ -118,11 +122,15 @@
             <input type="hidden" :name="'status[' + item.number + ']'" :value="item.text" />
           </template>
       </v-data-table>
+      
     </v-card>
     <!-- ปุ่มบันทึก -->
     <v-card-actions>
       <v-spacer></v-spacer>
-      <button type="button" @click="confirmSubmit" class="btn btn-primary">Save</button>
+      <div style="margin-right:10px">
+        <button type="button" @click="exportToExcel" class="btn btn-primary">Export to Excel</button>
+      </div>
+      <button type="button" @click="confirmSubmit" class="btn btn-success">Save</button>
 
     </v-card-actions>
     </v-card>
@@ -136,7 +144,7 @@
 
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
@@ -185,8 +193,16 @@ var app = new Vue({
     this.fetchRegisters();
   },
   methods: {
+    exportToExcel() {
+      const ws = XLSX.utils.json_to_sheet(this.list); // แปลงข้อมูลใน list เป็น sheet
+      const wb = XLSX.utils.book_new(); // สร้าง workbook ใหม่
+      XLSX.utils.book_append_sheet(wb, ws, "Registers"); // เพิ่ม sheet ลงใน workbook
+      
+      // สร้างไฟล์ Excel และดาวน์โหลด
+      XLSX.writeFile(wb, "list_registers.xlsx");
+    },
     toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen; // สลับสถานะเปิด/ปิด
+      this.dropdownOpen = !this.dropdownOpen; // สลับสถานะเปิด/ปิด
     },
     filterStatus(status) {
       this.selectedStatus = status === 'ทั้งหมด' ? 'Filter by Status' : status; // อัปเดตข้อความ

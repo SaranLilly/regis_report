@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Register;
 
 
 class RegisterController extends Controller
@@ -17,8 +18,7 @@ class RegisterController extends Controller
         $status = $request->query('status');
 
         // เริ่มต้นการ query
-        $query = DB::table('register')
-            ->join('status', 'register.register_status', '=', 'status.status_id')
+        $query = Register::join('status', 'register.register_status', '=', 'status.status_id')
             ->select(
                 'register.register_id as number', 
                 DB::raw("DATE_FORMAT(register.register_datetime, '%d-%m-%Y %H:%i') as datetime"),
@@ -62,16 +62,13 @@ class RegisterController extends Controller
             }
 
             // อัปเดตข้อมูลในฐานข้อมูล
-            DB::table('register')
-                ->where('register_id', $id) // อ้างอิง ID
-                ->update(['register_status' => $updateStatus]);
+            $register = Register::find($id); // ค้นหา register ตาม ID
+            if ($register) {
+                $register->register_status = $updateStatus; // ตั้งค่าค่าของสถานะ
+                $register->save(); // บันทึกการเปลี่ยนแปลง
+            }
         }
 
     }
 
 }
-
-
-// $new_tel = '';                                                                                                                                          $tel = substr(($tel), 0, 10);
-        
-// $new_tel = 'XXX-XXX-' . substr($tel, -4);
