@@ -8,14 +8,16 @@
 
 <style>
 </style>
-
-<div class="container" id="app" style="margin-top:40px;">
+<div class="container" id="app" style="margin-top:30px width:10px;">
   <template>
   <form id="registerForm" method="POST" action="/register/update-status">
     <v-card>
       <v-card-title>
           รายการการลงทะเบียน
         <v-spacer></v-spacer>
+        
+        
+      <div style="margin-right:20px">
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -23,6 +25,49 @@
           single-line
           hide-details
         ></v-text-field>
+      </div>
+      
+      <div class="dropdown" style="margin-top:11px">
+        <button 
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          @click="toggleDropdown" 
+          aria-expanded="false">
+          filter <!-- ใช้ตัวแปร Vue.js ที่นี่ -->
+        </button>
+        <div 
+          class="dropdown-menu" 
+          v-if="dropdownOpen" 
+          style="display: block;">
+          <button 
+            class="dropdown-item" 
+            type="button"
+            @click="filterStatus('ทั้งหมด')">
+            ทั้งหมด
+          </button>
+          <button 
+            class="dropdown-item" 
+            type="button"
+            @click="filterStatus('ลงทะเบียนสำเร็จ')">
+            ลงทะเบียนสำเร็จ
+          </button>
+          <button 
+            class="dropdown-item" 
+            type="button"
+            @click="filterStatus('ยกเลิกการลงทะเบียน')">
+            ยกเลิกการลงทะเบียน
+          </button>
+          <button 
+            class="dropdown-item" 
+            type="button"
+            @click="filterStatus('รอดำเนินการ')">
+            รอดำเนินการ
+          </button>
+        </div>
+      </div>
+
+
+
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -33,7 +78,15 @@
 
       <template v-slot:item.image="{ item }">
         <div class="text-center" style="margin:10px">
-          <img :src="item.image" alt="User Image" width="100" height="100" v-if="item.image" />
+          <img 
+            :src="item.image" 
+            alt="User Image" 
+            width="100" 
+            height="100" 
+            v-if="item.image" 
+            style="cursor: pointer;"
+            @click="openImageModal(item.image)"
+          />
           <span v-else>No Image</span> <!-- กรณีไม่มีรูป -->
         </div>
       </template>
@@ -67,7 +120,8 @@
     </form>
 
   </template>
-
+  <v-dialog v-model="dialog" max-width="500px">
+  
   
 
 </div>
@@ -77,7 +131,9 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9ScvIi1rtm7eFf/nJGzvnD3M8fXckl5K7UZO3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <!-- <script>
   export default {
     data () {
@@ -97,6 +153,8 @@ var app = new Vue({
   el: '#app',
   vuetify: new Vuetify(),
   data: () => ({
+    selectedStatus: 'Filter by Status',  // กำหนดค่าเริ่มต้น
+    dropdownOpen: false,
     search: '',
     headers: [
       { text: 'ลำดับ', align: 'start', sortable: false, value: 'number' },
@@ -109,17 +167,29 @@ var app = new Vue({
       { text: 'ตรวจสอบ', value: 'check' },
     ],
     list: [],
+    dialog: false,
+    selectedImage: null,
   }),
   mounted() {
     axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     this.fetchRegisters();
   },
   methods: {
-    fetchRegisters() {
-      axios.get('/getAllList')
+    toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen; // สลับสถานะเปิด/ปิด
+    },
+    filterStatus(status) {
+      this.selectedStatus = status === 'ทั้งหมด' ? 'Filter by Status' : status; // อัปเดตข้อความ
+      this.dropdownOpen = false; // ปิด dropdown หลังเลือก
+      
+      // ส่งค่า status ไปยัง backend เพื่อกรองข้อมูล
+      axios.get('/getAllList', {
+        params: {
+          status: status // ส่งค่า status ไปใน query string
+        }
+      })
       .then(response => {
-        // เพิ่ม base URL ให้กับ path รูปภาพ
-        const baseUrl = window.location.origin; // ดึง base URL ของเว็บ
+        const baseUrl = window.location.origin;
         this.list = response.data.map(item => {
           return {
             ...item,
@@ -127,10 +197,26 @@ var app = new Vue({
           };
         });
       })
-        .catch(error => {
-          console.error("Error fetching registers:", error);
-          Swal.fire("Error!", "Cannot fetch data at this moment.", "error");
+      .catch(error => {
+        console.error("Error fetching filtered registers:", error);
+        Swal.fire("Error!", "Cannot fetch data at this moment.", "error");
+      });
+    },
+    fetchRegisters() {
+      axios.get('/getAllList')
+      .then(response => {
+        const baseUrl = window.location.origin;
+        this.list = response.data.map(item => {
+          return {
+            ...item,
+            image: item.image ? `${baseUrl}/storage/${item.image}` : null
+          };
         });
+      })
+      .catch(error => {
+        console.error("Error fetching registers:", error);
+        Swal.fire("Error!", "Cannot fetch data at this moment.", "error");
+      });
     },
     confirmSubmit() {
       Swal.fire({
@@ -140,29 +226,21 @@ var app = new Vue({
         denyButtonText: "<span style='color: white;'>Cancel</span>",
       }).then((result) => {
         if (result.isConfirmed) {
-          // Swal.fire("Saved!", "", "success");
-          // document.getElementById("registerForm").submit(); // ส่งฟอร์ม
-          
           const formData = new FormData(document.getElementById("registerForm"));
-
           axios.post('/register/update-status', formData)
-          .then(response => {
-            Swal.fire("Saved!", response.data.message || "Changes have been saved.", "success")
-            .then(() => {
-              // Fetch the updated data to refresh the table
-              this.fetchRegisters();
+            .then(response => {
+              Swal.fire("Saved!", response.data.message || "Changes have been saved.", "success")
+              .then(() => {
+                this.fetchRegisters();
+              });
+            })
+            .catch(error => {
+              Swal.fire("Error!", error.response.data.message || "Something went wrong.", "error");
             });
-            //this.list = response.data.updatedRegisters || this.list;//update สถานะตารางใหม่จาก response
-          })
-          .catch(error => {
-            Swal.fire("Error!", error.response.data.message || "Something went wrong.", "error");
-          });
-
-        } else if (result.isDenied) {
-
         }
       });
     }
   }
 });
 </script>
+

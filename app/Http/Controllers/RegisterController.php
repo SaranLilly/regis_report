@@ -12,35 +12,39 @@ class RegisterController extends Controller
 {
     public function getAllList(Request $request)
     {
-        $registers = DB::table('register')
+        // รับค่า status จาก query string ถ้ามี
+        $status = $request->query('status');
+
+        // เริ่มต้นการ query
+        $query = DB::table('register')
             ->join('status', 'register.register_status', '=', 'status.status_id')
-            ->select('register.register_id as number', 
-                     'register.register_datetime as datetime', 
-                     'register.register_name as name', 
-                     'register.register_tel as tel', 
-                     'register.register_mail as email',
-                     'register.register_image as image',
-                     'status.status_name as status')
-                     ->orderByRaw("
-                     CASE 
-                         WHEN status.status_id = '1' THEN 1
-                         WHEN status.status_id= '2' THEN 2
-                         WHEN status.status_id = '3' THEN 3
-                         ELSE 4
-                     END
-                 ")
-            ->get();
+            ->select(
+                'register.register_id as number', 
+                DB::raw("DATE_FORMAT(register.register_datetime, '%d-%m-%Y %H:%i') as datetime"),
+                'register.register_name as name', 
+                'register.register_tel as tel', 
+                'register.register_mail as email',
+                'register.register_image as image',
+                'status.status_name as status'
+            )
+            ->orderByRaw("
+                CASE 
+                    WHEN status.status_id = '1' THEN 1
+                    WHEN status.status_id = '2' THEN 2
+                    WHEN status.status_id = '3' THEN 3
+                    ELSE 4
+                END
+            ");
 
-        // dd($registers);
+        if ($status && $status !== 'ทั้งหมด') {
+            $query->where('status.status_name', $status);
+        }
+
+        $query->orderByRaw("register.register_id ASC");
+        // ดึงข้อมูลตาม query
+        $registers = $query->get();
+
         return response()->json($registers);
-        // return view('list', [
-        //     'registers' => $registers->map(function ($register) {
-        //         $register->tel = 'xxxxxx' . substr($register->tel, -4);
-        //         $register->email='xxxxxx'. substr($register->email, -4);
-
-        //         return $register;
-        //     }),
-        // ]);
     }
     public function updateStatus(Request $request)
     {
