@@ -23,8 +23,8 @@ class RegisterController extends Controller
                 'register.register_id as number', 
                 DB::raw("DATE_FORMAT(register.register_datetime, '%d-%m-%Y %H:%i') as datetime"),
                 'register.register_name as name', 
-                'register.register_tel as tel', 
-                'register.register_mail as email',
+                DB::raw("CONCAT('xxxxxx', SUBSTRING(register.register_tel, -4)) as tel"), 
+                DB::raw("CONCAT(SUBSTRING(register.register_mail, 1, 3), '...', SUBSTRING(register.register_mail, LOCATE('@', register.register_mail))) as email"),
                 'register.register_image as image',
                 'status.status_name as status'
             )

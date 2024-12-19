@@ -23,16 +23,6 @@ class LoginController extends Controller
         //     'password' => Hash::make('test1234'),
         // ]);
 
-        // if (Auth::attempt(['email' => $validated['email'], 'password' => $validated['password']])) {
-        //     $user = Auth::user();
-        //     session(['id' => $user->id]);
-        
-        //     return response()->json([
-        //         'message' => 'Login successful',
-        //         'user' => $user,
-        //     ]);
-        //     return redirect('/list')->with('success', 'เข้าสู่ระบบสำเร็จ!');
-        // }
 
         // ตรวจสอบข้อมูลการเข้าสู่ระบบ
     if (Auth::attempt(['email' => $validated['email'], 'password' => $validated['password']])) {
@@ -40,6 +30,7 @@ class LoginController extends Controller
         $user = Auth::user();
         session(['id' => $user->id]);
 
+        
         // ตรวจสอบว่าต้องการ JSON response หรือ redirect
         if ($request->wantsJson()) {
             return response()->json([
@@ -53,16 +44,7 @@ class LoginController extends Controller
     }
         $user = DB::table('users')->where('email', $validated['email'])->where('password', $validated['password'])->first();
 
-        
-
-        
-
-       
-        // $session = DB::table('session')->
-                
-        // if ($user) {
-        //         return redirect('/list')->with('success', 'เข้าสู่ระบบสำเร็จ!');
-        // }
+   
 
       
         return back()->withErrors([
@@ -71,13 +53,3 @@ class LoginController extends Controller
     }
 }
 
-
-
-// Form::create([
-//     'register_name' => $validated['register_name'],
-//     'register_mail' => $validated['register_mail'],
-//     'register_tel' => $validated['register_tel'],
-//     'register_status' => '1',
-//     'register_datetime' => Carbon::now(),
-//     'register_image' => $path,
-// ]);

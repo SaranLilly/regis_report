@@ -25,8 +25,6 @@ class UserController extends Controller
         $checkFromDB = Form::where('register_mail', $validated['register_mail'])
         ->orWhere('register_tel', $validated['register_tel'])
         ->first();
-
-
     
         if ($checkFromDB) {
             return response()->json([
@@ -36,24 +34,8 @@ class UserController extends Controller
                 ]
             ]); 
         }
-        
 
         // dd($validated);
-        // $test = new Form();
-        // $test->register_name= $validated['register_name'];
-        // $test->register_mail= $validated['register_mail'];
-        // $test->register_tel= $validated['register_tel'];
-        // $test->register_status= '1';
-        // $test->register_datetime = Carbon::now(); 
-
-        // $path = $request->file('register_image')->store('image');
-
-        // //    print_r($path); exit;
-        // $test->register_image = $path;
-
-        // // Form::create($test);
-
-        // $test->save();  
 
         // จัดการอัปโหลดไฟล์ (ถ้ามี)
         $path = null;
