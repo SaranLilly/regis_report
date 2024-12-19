@@ -1,4 +1,5 @@
-<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -8,12 +9,7 @@
 
 <style>
 </style>
-<h1>ยินดีต้อนรับ {{ $user->email }}</h1>
 
-<form action="{{ route('logout') }}" method="POST">
-  @csrf
-  <button type="submit" class="btn btn-danger">Logout</button>
-</form>
 
 
 <div class="container" id="app" style="margin-top:40px;">
@@ -21,6 +17,20 @@
    
   <form id="registerForm" method="POST" action="/register/update-status">
 
+{{-- <h1>ยินดีต้อนรับ {{ $user->email }}</h1> --}}
+<h2>ยินดีต้อนรับ {{ $user->email }}</h2>
+{{-- <h3>ยินดีต้อนรับ {{ $user->email }}</h3>
+<h4>ยินดีต้อนรับ {{ $user->email }}</h4> --}}
+
+<form action="{{ route('logout') }}" method="POST">
+  @csrf
+  <div style="text-align: right;">
+      <button type="submit" class="btn btn-danger">Logout</button>
+  </div>
+
+</form>
+
+    
     <v-card>
       <v-card-title>
           รายการการลงทะเบียน
