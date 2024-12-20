@@ -34,5 +34,18 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'line' => [
+        'client_id' => env('LINE_CLIENT_ID'),
+        'client_secret' => env('LINE_CLIENT_SECRET'),
+        'redirect' => env('LINE_REDIRECT_URI'),
+    ],
+    // 'azure' => [
+    //     'client_id' => env('SOCIALITE_AZURE_CLIENT_ID'),
+    //     'client_secret' => env('SOCIALITE_AZURE_CLIENT_SECRET'),
+    //     'redirect' => env('SOCIALITE_AZURE_REDIRECT_URI'),
+    // ],
+
+    
+
 
 ];

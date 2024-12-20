@@ -50,6 +50,9 @@
         </div>
        
       </form>
+        <a href="/auth/line">
+            <img src="https://static.line-scdn.net/line-lp/img/img_login_btn.png" alt="Login with LINE">
+        </a>
     </div>
 </div>
 

@@ -20,6 +20,8 @@ return [
 
     'default' => env('LOG_CHANNEL', 'stack'),
 
+    
+
     /*
     |--------------------------------------------------------------------------
     | Deprecations Log Channel
@@ -52,11 +54,16 @@ return [
 
     'channels' => [
 
+        // 'stack' => [
+        //     'driver' => 'stack',
+        //     'channels' => explode(',', env('LOG_STACK', 'single')),
+        //     'ignore_exceptions' => false,
+        // ],
         'stack' => [
-            'driver' => 'stack',
-            'channels' => explode(',', env('LOG_STACK', 'single')),
-            'ignore_exceptions' => false,
-        ],
+    'driver' => 'stack',
+    'channels' => ['single'],
+],
+
 
         'single' => [
             'driver' => 'single',

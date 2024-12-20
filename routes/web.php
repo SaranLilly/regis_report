@@ -8,6 +8,10 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\Registercontroller;
 
 
+Route::get('auth/line', [LoginController::class, 'redirectToLine']);
+Route::get('auth/line/callback', [LoginController::class, 'handleLineCallback']);
+
+
 Route::get('/', function () {
     return view('welcome');
 });

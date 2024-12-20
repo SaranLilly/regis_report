@@ -17,10 +17,10 @@
    
   <form id="registerForm" method="POST" action="/register/update-status">
 
-{{-- <h1>ยินดีต้อนรับ {{ $user->email }}</h1> --}}
-<h2>ยินดีต้อนรับ {{ $user->email }}</h2>
-{{-- <h3>ยินดีต้อนรับ {{ $user->email }}</h3>
-<h4>ยินดีต้อนรับ {{ $user->email }}</h4> --}}
+
+  <h2>ยินดีต้อนรับ {{ $user->user_name }} {{ $user->email }}</h2>
+
+
 
 <form action="{{ route('logout') }}" method="POST">
   @csrf
