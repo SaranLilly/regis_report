@@ -89,6 +89,8 @@
 
 
       </v-card-title>
+
+
       <v-data-table
         :headers="headers"
         :items="list"
@@ -180,19 +182,23 @@
     },
   }
 </script> -->
+
+
 <script>
 var app = new Vue({
   el: '#app',
   vuetify: new Vuetify(),
   data: () => ({
     userRole: "{{ $user->user_role }}",
-    selectedStatus: 'Filter by Status',  // กำหนดค่าเริ่มต้น
+    selectedStatus: 'Filter by Status',
     dropdownOpen: false,
     search: '',
     list: [],
     dialog: false,
     selectedImage: null,
   }),
+
+  
   computed: {
     headers() {
       // ตรวจสอบ userRole ก่อนกำหนด headers
